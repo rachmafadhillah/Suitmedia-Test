@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.isVisible
+import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.suitmediatest.adapter.LoadingStateAdapter
 import com.example.suitmediatest.adapter.UserAdapter
@@ -41,8 +43,22 @@ class ThirdScreenActivity : AppCompatActivity() {
                 adapter.retry()
             }
         )
-        mainViewModel.user.observe(this) {
-            adapter.submitData(lifecycle, it)
+
+        // Show progress bar initially
+        binding.progressIndicator.isVisible = true
+
+        mainViewModel.user.observe(this) { pagingData ->
+            adapter.submitData(lifecycle, pagingData)
+        }
+
+        adapter.addLoadStateListener { loadState ->
+            val isListEmpty = adapter.itemCount == 0
+            // Show progress bar when loading data
+            binding.progressIndicator.isVisible = loadState.source.refresh is LoadState.Loading
+            // Show "No Data" text if list is empty and not loading
+            binding.tvNoData.isVisible = isListEmpty && loadState.source.refresh is LoadState.NotLoading
+            // Show the list only when data is available
+            binding.rvUser.isVisible = !isListEmpty || loadState.source.refresh is LoadState.NotLoading
         }
 
         adapter.setOnItemClickListener { user ->

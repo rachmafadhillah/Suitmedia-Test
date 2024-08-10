@@ -14,7 +14,7 @@ class UserRepository(private val userDatabase: UserDatabase, private val apiServ
     fun getUser(): LiveData<PagingData<DataItem>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 3,
+                pageSize = 10,
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {

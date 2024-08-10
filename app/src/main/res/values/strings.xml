@@ -13,4 +13,5 @@
     <string name="retry">Coba Lagi</string>
     <string name="username">Username</string>
     <string name="email">email@email.com</string>
+    <string name="no_data_user">No Data User</string>
 </resources>
